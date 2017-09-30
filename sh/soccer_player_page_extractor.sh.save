@@ -1,0 +1,3 @@
+grep "/13/players/[0-9]*/*/" ~/workspace/MatchGuesser/webpages/13-seriea/*
+web_pages_dir=~/workspace/MatchGuesser/webpages/13-se
+arr=grep "/13/players/[0-9]*/*/" $web_pages_dir*
