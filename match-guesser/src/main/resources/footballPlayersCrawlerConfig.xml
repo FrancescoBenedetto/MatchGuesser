@@ -1,0 +1,16 @@
+<config>
+	<seeds>
+		<seed>http://www.futhead.com/10/</seed>
+	</seeds>
+	<threads>10</threads>
+	<proxy>
+		<active>true</active>
+		<host>192.168.10.1</host>
+		<port>3128</port>
+		<username>fbenedet</username>
+		<password>FBenedet.90</password>
+	</proxy>
+	<folders>
+		<crawlFolder>/home/francesco/crawled/</crawlFolder>
+	</folders>
+</config>

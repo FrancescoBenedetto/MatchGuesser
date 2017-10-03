@@ -16,9 +16,9 @@ public class FootballPlayersCrawler extends WebCrawler{
 	 private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg"
              + "|png|mp3|mp4|zip|gz))$");
 	 
-	 private final String seed = "http://www.futhead.com/";
+	 private final String baseUrl = "http://www.futhead.com/";
 	 
-	 private final String filesPath = "C:\\Users\\E002622\\Desktop\\crawled\\output\\";
+	 private final String filesPath = "/home/francesco/crawled/output/";
 	
 	 
 	 public FootballPlayersCrawler() {
@@ -39,13 +39,12 @@ public class FootballPlayersCrawler extends WebCrawler{
          String href = url.getURL().toLowerCase();
          String referringPageUrl = referringPage.getWebURL().getURL().toLowerCase();
          return !FILTERS.matcher(href).matches()
-        		 &&
-        		 (href.matches(seed + "[0-9]{2}/leagues/((seriea/|serie-a/|italy-serie-a/|calcio-a/)(\\?page=[0-9]{1,2})?)?")
-        				 ||
-        			(referringPageUrl.matches(seed + "[0-9]{2}/leagues/(seriea|serie-a|italy-serie-a|calcio-a)/(\\?page=[0-9]{1,2})?")
-        				 &&
-        				 href.matches(seed + "[0-9]{2}/players/[0-9]*/.*")
-        				 )
+        		 	&&
+        		(
+        	isALeaguePageLink(href)
+        			||
+        	(isASerieALeaguePageLink(referringPageUrl) && isAPlayersPageLink(href))
+        				 
                 );
      }
 
@@ -57,30 +56,35 @@ public class FootballPlayersCrawler extends WebCrawler{
      public void visit(Page page) {
          String url = page.getWebURL().getURL();
          System.out.println("URL: " + url);
-         String html = "";
-
-         if (page.getParseData() instanceof HtmlParseData) {
-             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
-             String text = htmlParseData.getText();
-             html = htmlParseData.getHtml();
-             Set<WebURL> links = htmlParseData.getOutgoingUrls();
-
-             System.out.println("Text length: " + text.length());
-             System.out.println("Html length: " + html.length());
-             System.out.println("Number of outgoing links: " + links.size());
-         }
          
-         if(url.matches(seed + "[0-9]{2}/players/[0-9]*/.*")){
-        	try {
-        		PrintWriter writer = new PrintWriter(filesPath + url.split("/")[3] + "\\" + url.split("/")[6] + "_" + UUID.randomUUID().toString());
-				writer.print(html);
+         if(isAPlayersPageLink(url) && page.getParseData() instanceof HtmlParseData){
+        	 HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
+        	 String html = htmlParseData.getHtml();
+        	 writeHtmlContent(html, url);
+         }
+    }
+     
+     private boolean isALeaguePageLink(String href) {
+    	 return href.matches(baseUrl + "[0-9]{2}/leagues/((seriea/|serie-a/|italy-serie-a/|calcio-a/)(\\?page=[0-9]{1,2})?)?");
+     }
+     
+     private boolean isASerieALeaguePageLink(String href) {
+    	 return href.matches(baseUrl + "[0-9]{2}/leagues/(seriea|serie-a|italy-serie-a|calcio-a)/(\\?page=[0-9]{1,2})?");
+     }
+     
+     private boolean isAPlayersPageLink(String href) {
+    	 return href.matches(baseUrl + "[0-9]{2}/players/[0-9]*/.*");
+     }
+     
+     private void writeHtmlContent(String htmlPage, String url) {
+    	 try {
+     		PrintWriter writer = new PrintWriter(filesPath + url.split("/")[3] + "/" + url.split("/")[6] + "_" + UUID.randomUUID().toString());
+				writer.print(htmlPage);
 				writer.close();
-				
-						
-        	} catch (FileNotFoundException e) {
+				} 
+     	catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-         }
-    }
+     }
 }
