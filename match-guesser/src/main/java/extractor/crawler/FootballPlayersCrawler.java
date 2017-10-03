@@ -2,7 +2,6 @@ package extractor.crawler;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
