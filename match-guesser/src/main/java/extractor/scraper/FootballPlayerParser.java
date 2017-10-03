@@ -12,7 +12,7 @@ public class FootballPlayerParser {
 	public void scriviFile(File file) {
 		try {
 			Document doc = Jsoup.parse(file, "UTF-8", "http://html.it/");
-			// Document doc =
+			// Document doc 
 			// Jsoup.connect("http://www.futhead.com/13/players/13545/antonio-di-natale/").get();
 			int dimensione = doc.body().getElementsByClass("player-stat-title").next().size();
 			String titolo = doc.title();
