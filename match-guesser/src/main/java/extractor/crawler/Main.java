@@ -4,10 +4,10 @@ package extractor.crawler;
 public class Main {
 
 	public static void main(String[] args) {
-		String configFilePath = "/home/francesco/workspace/MatchGuesser/match-guesser/src/main/resources/footballPlayersCrawlerConfig.xml";
+		String configFilePath = "/home/francesco/workspace/MatchGuesser/match-guesser/src/main/resources/matchesCrawlerConfig.xml";
 		try {
 			ControllerFactory.createController(configFilePath)
-				.start(FootballPlayersCrawler.class, 
+				.start(MatchesCrawler.class, 
 						CrawlConfigFactory.createEnvCrawlConfig(configFilePath).getThreads());
 		}
 			catch (Exception e) {
