@@ -23,4 +23,4 @@ match_data = pd.read_sql("SELECT * FROM Match WHERE id=10609;", conn)
 #Generating or retrieving already existant FIFA data
 fifa_data = dc.get_fifa_data(match_data, player_stats_data, data_exists = False)
 
-print(fifa_data.iloc[0])
+print(fifa_data)
