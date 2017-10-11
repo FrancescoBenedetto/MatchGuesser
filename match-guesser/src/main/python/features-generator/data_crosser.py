@@ -53,9 +53,11 @@ def get_fifa_stats(match, player_stats):
             overall_rating = pd.Series(0)
         else:
             current_stats.reset_index(inplace = True, drop = True)
-            overall_rating = pd.Series(current_stats.loc[0, "overall_rating"])
+            overall_rating = pd.Series(current_stats.loc[0, 'potential':'gk_reflexes'])
 
+        print(overall_rating)
         #Rename stat
+        """
         name = "{}_overall_rating".format(player)
         names.append(name)
 
@@ -68,4 +70,5 @@ def get_fifa_stats(match, player_stats):
     player_stats_new.reset_index(inplace = True, drop = True)
 
     #Return player stats
-    return player_stats_new.ix[0]
+    return player_stats_new.iloc[0]
+    """
