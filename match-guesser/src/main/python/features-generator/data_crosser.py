@@ -55,20 +55,17 @@ def get_fifa_stats(match, player_stats):
             current_stats.reset_index(inplace = True, drop = True)
             overall_rating = pd.Series(current_stats.loc[0, 'potential':'gk_reflexes'])
 
-        print(overall_rating)
         #Rename stat
-        """
-        name = "{}_overall_rating".format(player)
-        names.append(name)
+        name = [player+"_"+skillname for skillname in overall_rating.axes]
+        names.extend(name)
 
         #Aggregate stats
-        player_stats_new = pd.concat([player_stats_new, overall_rating], axis = 1)
+        player_stats_new = pd.concat([player_stats_new, overall_rating])
 
-    player_stats_new.columns = names
-    player_stats_new['match_api_id'] = match_id
+    player_stats_new.index = np.concatenate(names).ravel().tolist()
+    #player_stats_new['match_api_id'] = match_id
 
-    player_stats_new.reset_index(inplace = True, drop = True)
+    #player_stats_new.reset_index(inplace = True, drop = True)
 
     #Return player stats
-    return player_stats_new.iloc[0]
-    """
+    return player_stats_new

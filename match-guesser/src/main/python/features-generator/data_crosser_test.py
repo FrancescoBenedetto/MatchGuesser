@@ -11,20 +11,14 @@ class TestDataCrosser(unittest.TestCase):
         conn = sqlite3.connect(database)
         self.players = pd.read_sql("SELECT * FROM Player;", conn)
         self.player_stats_data = pd.read_sql("SELECT * FROM Player_Attributes;", conn)
-        self.roma_inter_2008_match_data = pd.read_sql("SELECT * FROM Match WHERE id=10609;", conn)
+        self.roma_inter_2008_match_data = pd.read_sql("SELECT * FROM Match WHERE id=10609;", conn).iloc[0]
+        self.match_stats = dc.get_fifa_stats(self.roma_inter_2008_match_data, self.player_stats_data)
 
-    def test_get_fifa_stats(self):
-        romas_handkeeper_player_api_id = dc.get_fifa_stats(self.roma_inter_2008_match_data.iloc[0], self.player_stats_data)
-        """
-        cross check with:
-        select *
-        from Player, Player_Attributes
-        where Player.player_name='Doni'
-        and Player_Attributes.player_fifa_api_id=Player.player_fifa_api_id
-        and date='2008-08-30 00:00:00'
-        """
-        #self.assertEqual(romas_handkeeper_player_api_id.loc['home_player_1_overall_rating'], 81)
-        print("done")
+    def test_get_fifa_stats_size(self):
+        self.assertEqual(self.match_stats.size, 814)
+
+    def test_get_fifa_stats_away_player_dribbling_skill(self):
+        self.assertEqual(self.match_stats.loc['away_player_11_dribbling'][0], 92)
 
 
 if __name__ == '__main__':
