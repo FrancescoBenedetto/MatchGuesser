@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from time import time
 
 def get_fifa_data(matches, player_stats, path = None, data_exists = False):
     ''' Gets fifa data for all matches. '''
@@ -12,16 +13,19 @@ def get_fifa_data(matches, player_stats, path = None, data_exists = False):
     else:
 
         print("Collecting fifa data for each match...")
-        #start = time()
+        start = time()
 
         #Apply get_fifa_stats for each match
-        fifa_data = matches.apply(lambda x :get_fifa_stats(x, player_stats), axis = 1)
+        fifa_data = matches.apply(lambda x :get_fifaStats_to_matchRes(x, player_stats), axis = 1)
 
-        #end = time()
-        #print("Fifa data collected in {:.1f} minutes".format((end - start)/60))
+        end = time()
+        print("Fifa data collected in {:.1f} minutes".format((end - start)/60))
 
     #Return fifa_data
     return fifa_data
+
+def get_fifaStats_to_matchRes(match, player_stats):
+    return get_fifa_stats(match, player_stats).append(get_match_goals(match))
 
 def get_fifa_stats(match, player_stats):
     ''' Aggregates fifa stats for a given match. '''
@@ -68,4 +72,7 @@ def get_fifa_stats(match, player_stats):
     #player_stats_new.reset_index(inplace = True, drop = True)
 
     #Return player stats
-    return player_stats_new
+    return player_stats_new.T.ix[0]
+
+def get_match_goals(match):
+    return match.loc['home_team_goal':'away_team_goal']
