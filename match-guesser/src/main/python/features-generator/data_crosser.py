@@ -63,7 +63,7 @@ def get_fifa_stats(match, player_stats):
             overall_rating = pd.Series(0)
         else:
             current_stats.reset_index(inplace = True, drop = True)
-            overall_rating = pd.Series(current_stats.loc[0, 'potential':'gk_reflexes'])
+            overall_rating = pd.Series(current_stats.loc[0, 'preferred_foot':'gk_reflexes'])
 
         #Rename stat
         name = [player+"_"+skillname for skillname in overall_rating.axes]
@@ -79,6 +79,18 @@ def get_fifa_stats(match, player_stats):
 
     #Return player stats
     return player_stats_new.T.ix[0]
+
+def cut_fifa_useless_stats(match_stats):
+    h_p = 'home_player_'
+    a_p = 'away_player_'
+    #cut handkeepers useless skills
+    match_stats = match_stats.drop(match_stats.loc[h_p+'1_'+'preferred_foot':h_p+'1_'+'sliding_tackle'])
+    match_stats = match_stats.drop(match_stats.loc[a_p+'1_'+'preferred_foot':a_p+'1_'+'sliding_tackle'])
+    #cut other players useless skills
+    for i in range(2,11):
+        match_stats = match_stats.drop(match_stats.loc[h_p+i+'_gk_diving':h_p+i+'_gk_reflexes'])
+        match_stats = match_stats.drop(match_stats.loc[a_p+i+'_gk_diving':a_p+i+'_gk_reflexes'])
+    return match_stats
 
 def get_match_goals(match):
     return match.loc['home_team_goal':'away_team_goal']

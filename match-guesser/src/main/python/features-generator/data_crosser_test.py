@@ -17,7 +17,7 @@ class TestDataCrosser(unittest.TestCase):
         self.one_match_data = dc.get_fifa_data(self.roma_inter_2008_match_data, self.player_stats_data)
 
     def test_get_fifa_stats_size(self):
-        self.assertEqual(self.match_stats.size, 814)
+        self.assertEqual(self.match_stats.size, 792)
 
     def test_get_fifa_stats_away_player_dribbling_skill(self):
         self.assertEqual(self.match_stats.loc['away_player_11_dribbling'], 92)
@@ -36,6 +36,10 @@ class TestDataCrosser(unittest.TestCase):
 
     def test_get_fifa_data_one_match_home_team_goal(self):
         self.assertEqual(self.one_match_data.loc[0,'home_team_goal'],0)
+
+    def test_cut_fifa_stats_stats_number(self):
+        self.assertEqual(dc.cut_fifa_useless_stats(self.match_stats).size, 630)
+
 
 if __name__ == '__main__':
     unittest.main()
