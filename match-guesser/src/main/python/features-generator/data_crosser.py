@@ -84,12 +84,12 @@ def cut_fifa_useless_stats(match_stats):
     h_p = 'home_player_'
     a_p = 'away_player_'
     #cut handkeepers useless skills
-    match_stats = match_stats.drop(match_stats.loc[h_p+'1_'+'preferred_foot':h_p+'1_'+'sliding_tackle'])
-    match_stats = match_stats.drop(match_stats.loc[a_p+'1_'+'preferred_foot':a_p+'1_'+'sliding_tackle'])
+    match_stats = match_stats.drop(match_stats.loc[h_p+'1_'+'preferred_foot':h_p+'1_'+'sliding_tackle'].index)
+    match_stats = match_stats.drop(match_stats.loc[a_p+'1_'+'preferred_foot':a_p+'1_'+'sliding_tackle'].index)
     #cut other players useless skills
     for i in range(2,11):
-        match_stats = match_stats.drop(match_stats.loc[h_p+i+'_gk_diving':h_p+i+'_gk_reflexes'])
-        match_stats = match_stats.drop(match_stats.loc[a_p+i+'_gk_diving':a_p+i+'_gk_reflexes'])
+        match_stats = match_stats.drop(match_stats.loc[h_p+str(i)+'_gk_diving':h_p+str(i)+'_gk_reflexes'].index)
+        match_stats = match_stats.drop(match_stats.loc[a_p+str(i)+'_gk_diving':a_p+str(i)+'_gk_reflexes'].index)
     return match_stats
 
 def get_match_goals(match):

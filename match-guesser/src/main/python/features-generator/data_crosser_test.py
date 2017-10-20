@@ -38,6 +38,7 @@ class TestDataCrosser(unittest.TestCase):
         self.assertEqual(self.one_match_data.loc[0,'home_team_goal'],0)
 
     def test_cut_fifa_stats_stats_number(self):
+        print(dc.cut_fifa_useless_stats(self.match_stats))
         self.assertEqual(dc.cut_fifa_useless_stats(self.match_stats).size, 630)
 
 
