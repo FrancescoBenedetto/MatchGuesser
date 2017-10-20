@@ -2,6 +2,7 @@ import unittest
 import sqlite3
 import pandas as pd
 import data_crosser as dc
+import csv_writer as wr
 
 class TestDataCrosser(unittest.TestCase):
 
@@ -38,8 +39,17 @@ class TestDataCrosser(unittest.TestCase):
         self.assertEqual(self.one_match_data.loc[0,'home_team_goal'],0)
 
     def test_cut_fifa_stats_stats_number(self):
-        print(dc.cut_fifa_useless_stats(self.match_stats))
         self.assertEqual(dc.cut_fifa_useless_stats(self.match_stats).size, 630)
+
+    def test_cut_fifa_stats_player_number(self):
+        self.assertEqual(dc.cut_fifa_useless_stats(self.match_stats).loc['home_player_2_preferred_foot':'home_player_2_sliding_tackle'].size, 31)
+
+    def test_players_have_same_skills_numbers(self):
+        full_cut_stats = dc.cut_fifa_useless_stats(self.match_stats)
+        drop_handkeepers = full_cut_stats.drop(full_cut_stats.loc['home_player_1_gk_diving':'home_player_1_gk_reflexes'].index)
+        drop_handkeepers = drop_handkeepers.drop(drop_handkeepers.loc['away_player_1_gk_diving':'away_player_1_gk_reflexes'].index)
+        self.assertEqual(drop_handkeepers.size, 620)
+
 
 
 if __name__ == '__main__':

@@ -73,12 +73,7 @@ def get_fifa_stats(match, player_stats):
         player_stats_new = pd.concat([player_stats_new, overall_rating])
 
     player_stats_new.index = np.concatenate(names).ravel().tolist()
-    #player_stats_new['match_api_id'] = match_id
-
-    #player_stats_new.reset_index(inplace = True, drop = True)
-
-    #Return player stats
-    return player_stats_new.T.ix[0]
+    return player_stats_new.T.iloc[0]
 
 def cut_fifa_useless_stats(match_stats):
     h_p = 'home_player_'
@@ -87,7 +82,7 @@ def cut_fifa_useless_stats(match_stats):
     match_stats = match_stats.drop(match_stats.loc[h_p+'1_'+'preferred_foot':h_p+'1_'+'sliding_tackle'].index)
     match_stats = match_stats.drop(match_stats.loc[a_p+'1_'+'preferred_foot':a_p+'1_'+'sliding_tackle'].index)
     #cut other players useless skills
-    for i in range(2,11):
+    for i in range(2,12):
         match_stats = match_stats.drop(match_stats.loc[h_p+str(i)+'_gk_diving':h_p+str(i)+'_gk_reflexes'].index)
         match_stats = match_stats.drop(match_stats.loc[a_p+str(i)+'_gk_diving':a_p+str(i)+'_gk_reflexes'].index)
     return match_stats
