@@ -25,7 +25,13 @@ def get_fifa_data(matches, player_stats, path = None, data_exists = False):
     return fifa_data
 
 def get_fifaStats_to_matchRes(match, player_stats):
-    return get_fifa_stats(match, player_stats).append(get_match_goals(match))
+    try:
+        temp = get_fifa_stats(match, player_stats).append(get_match_goals(match))
+        return temp
+    except:
+        print(match)
+        #print('---------------------------------------------STATS------------------------------------')
+        #print(player_stats.loc[0, 'potential':'gk_reflexes'])
 
 def get_fifa_stats(match, player_stats):
     ''' Aggregates fifa stats for a given match. '''
