@@ -28,10 +28,10 @@ def get_fifa_data(matches, player_stats, path = None, data_exists = False):
 def get_fifaStats_to_matchRes(match, player_stats):
     try:
         #get stats
-        start = time()
+        #start = time()
         temp = get_fifa_stats(match, player_stats)
-        end = time()
-        print("Fifa stats collected in {:.1f} seconds".format((end - start)))
+        #end = time()
+        #print("Fifa stats collected in {:.1f} seconds".format((end - start)))
         #cut useless stats
         temp = cut_fifa_useless_stats(temp)
         #append match results
@@ -53,7 +53,6 @@ def get_fifa_stats(match, player_stats):
                "away_player_10", "away_player_11"]
     player_stats_new = pd.DataFrame()
     names = []
-
     #Loop through all players
     for player in players:
 
@@ -80,6 +79,7 @@ def get_fifa_stats(match, player_stats):
             player_stats_new = pd.concat([player_stats_new, overall_rating])
 
     player_stats_new.index = np.concatenate(names).ravel().tolist()
+
     return player_stats_new.T.iloc[0]
 
 def cut_fifa_useless_stats(match_stats):
