@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from time import time
+import logging
 
 def get_fifa_data(matches, player_stats, path = None, data_exists = False):
     ''' Gets fifa data for all matches. '''
@@ -26,12 +27,18 @@ def get_fifa_data(matches, player_stats, path = None, data_exists = False):
 
 def get_fifaStats_to_matchRes(match, player_stats):
     try:
-        temp = get_fifa_stats(match, player_stats).append(get_match_goals(match))
+        #get stats
+        start = time()
+        temp = get_fifa_stats(match, player_stats)
+        end = time()
+        print("Fifa stats collected in {:.1f} seconds".format((end - start)))
+        #cut useless stats
+        temp = cut_fifa_useless_stats(temp)
+        #append match results
+        temp = temp.append(get_match_goals(match))
         return temp
     except:
-        print(match)
-        #print('---------------------------------------------STATS------------------------------------')
-        #print(player_stats.loc[0, 'potential':'gk_reflexes'])
+        logging.warning('error getting stats for match '+ str(match['id']))
 
 def get_fifa_stats(match, player_stats):
     ''' Aggregates fifa stats for a given match. '''
@@ -53,24 +60,24 @@ def get_fifa_stats(match, player_stats):
         #Get player ID
         player_id = match[player]
 
-        #Get player stats
-        stats = player_stats[player_stats.player_api_id == player_id]
+        #check player id is not null
+        if player_id is not None and np.isnan(player_id)==False:
+            #Get player stats
+            stats = player_stats[player_stats.player_api_id == player_id]
 
-        #Identify current stats
-        current_stats = stats[stats.date < date].sort_values(by = 'date', ascending = False)[:1]
+            #Identify current stats
+            current_stats = stats[stats.date < date].sort_values(by = 'date', ascending = False)[:1]
 
-        if player_id is None or np.isnan(player_id) == True:
-            overall_rating = pd.Series(0)
-        else:
+            #get all the skills of a player
             current_stats.reset_index(inplace = True, drop = True)
             overall_rating = pd.Series(current_stats.loc[0, 'preferred_foot':'gk_reflexes'])
 
-        #Rename stat
-        name = [player+"_"+skillname for skillname in overall_rating.axes]
-        names.extend(name)
+            #Rename stat
+            name = [player+"_"+skillname for skillname in overall_rating.axes]
+            names.extend(name)
 
-        #Aggregate stats
-        player_stats_new = pd.concat([player_stats_new, overall_rating])
+            #Aggregate stats
+            player_stats_new = pd.concat([player_stats_new, overall_rating])
 
     player_stats_new.index = np.concatenate(names).ravel().tolist()
     return player_stats_new.T.iloc[0]
